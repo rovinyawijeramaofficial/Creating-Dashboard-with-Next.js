@@ -28,13 +28,6 @@ export default function EditInvoiceForm({
     const formElement = event.target as HTMLFormElement;
     const formData = new FormData(formElement);
 
-    // Convert to a plain object
-    const updatedInvoice = {
-      customerId: formData.get('customerId') as string,
-      amount: parseFloat(formData.get('amount') as string) || 0,
-      status: formData.get('status') as string,
-    };
-
     
   try {
     // Update the invoice using FormData
