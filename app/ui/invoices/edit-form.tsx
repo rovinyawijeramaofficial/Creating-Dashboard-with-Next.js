@@ -10,7 +10,8 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/app/ui/button';
-import { updateInvoice } from '@/app/lib/actions';
+import { updateInvoice, State } from '@/app/lib/actions';
+import { useActionState } from 'react';
 
 export default function EditInvoiceForm({
   invoice,
@@ -19,29 +20,12 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
-  const router = useRouter();
-
-  const handleUpdateInvoice = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // Gather form data
-    const formElement = event.target as HTMLFormElement;
-    const formData = new FormData(formElement);
-
-    
-  try {
-    // Update the invoice using FormData
-    await updateInvoice(invoice.id, formData);
-
-    // Redirect to invoices page
-    router.push('/dashboard/invoices');
-  } catch (error) {
-    console.error('Failed to update invoice:', error);
-  }
-};
+  const initialState: State = { message: null, errors: {} };
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
 
   return (
-    <form onSubmit={handleUpdateInvoice}>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
